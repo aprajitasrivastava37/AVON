@@ -1,0 +1,590 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Avon Herbal | Premium Clean</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Plus Jakarta Sans Font -->
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- GSAP & ScrollTrigger -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: { sans: ['"Plus Jakarta Sans"', 'sans-serif'] },
+                    colors: {
+                        'brand-beige': '#FAF8F5',
+                        'brand-dark': '#0B192C',
+                        'brand-gold': '#F39C12',
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body { background-color: #FAF8F5; color: #0B192C; overflow-x: hidden; }
+        
+        /* Glassmorphism Nav */
+        .glass-nav {
+            background: rgba(250, 248, 245, 0.75);
+            backdrop-filter: blur(16px);
+            border-bottom: 1px solid rgba(0,0,0,0.05);
+        }
+
+        /* 3D Bottle Perspective Container */
+        .perspective-container {
+            perspective: 1000px;
+        }
+
+        .bottle-card {
+            transform-style: preserve-3d;
+            transition: transform 0.1s ease-out;
+        }
+
+        /* Glowing backdrop ring */
+        .glow-ring {
+            background: radial-gradient(circle, rgba(243, 156, 18, 0.35) 0%, rgba(253, 224, 71, 0.05) 60%, transparent 80%);
+            filter: blur(30px);
+        }
+
+        /* Liquid Blob Effect (Mid-section Splash) */
+        .liquid-blob {
+            position: absolute;
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%) scale(0);
+            width: 600px; height: 600px;
+            background: radial-gradient(circle, rgba(255,183,3,0.4) 0%, rgba(255,183,3,0) 70%);
+            border-radius: 40% 60% 70% 30% / 40% 50% 60% 50%;
+            filter: blur(40px);
+            z-index: 0;
+            opacity: 0;
+            transition: all 1s ease-out;
+        }
+
+        /* Floating Animation */
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-15px); }
+            100% { transform: translateY(0px); }
+        }
+        .float-anim { animation: float 6s ease-in-out infinite; }
+        
+        /* Custom styled scrollbar for review slider */
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+
+        /* Button hover */
+        .btn-hover { transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1); }
+        .btn-hover:hover { 
+            transform: translateY(-3px) scale(1.03); 
+            box-shadow: 0 15px 30px -10px rgba(0, 0, 0, 0.15); 
+        }
+    </style>
+</head>
+<body class="antialiased selection:bg-brand-dark selection:text-white">
+
+    <!-- 1. NAVIGATION -->
+    <nav class="fixed w-full top-0 z-50 glass-nav">
+        <div class="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
+            <div class="text-xl font-bold tracking-widest uppercase text-brand-dark">Avon Herbal</div>
+            <div class="hidden md:flex space-x-8 text-sm font-medium text-gray-600">
+                <a href="#hero" class="hover:text-black transition">Home</a>
+                <a href="#splash-section" class="hover:text-black transition">Products</a>
+                <a href="#elements" class="hover:text-black transition">Elements</a>
+                <a href="#reviews" class="text-black border-b-2 border-black pb-1">Reviews</a>
+            </div>
+            <button class="bg-brand-dark text-white px-6 py-2.5 rounded-full text-xs font-semibold tracking-wider uppercase btn-hover">Buy Now</button>
+        </div>
+    </nav>
+
+    <!-- 2. HERO SECTION WITH DYNAMIC 3D CANVAS SPLASH -->
+    <section id="hero" class="relative min-h-screen flex items-center justify-center pt-24 pb-12 overflow-hidden">
+        
+        <!-- Ambient Glow -->
+        <div class="absolute top-1/2 right-1/4 -translate-y-1/2 w-[600px] h-[600px] glow-ring rounded-full pointer-events-none z-0"></div>
+
+        <div class="max-w-7xl mx-auto px-6 w-full grid grid-cols-1 lg:grid-cols-12 gap-12 items-center relative z-10">
+            
+            <!-- LEFT CONTENT -->
+            <div class="lg:col-span-6 space-y-6 text-left">
+                <div class="gsap-hero inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-amber-100/80 text-amber-900 text-xs font-bold tracking-widest uppercase">
+                    <span class="w-2 h-2 rounded-full bg-amber-500 animate-pulse"></span>
+                    100% Organic Botanical Formula
+                </div>
+
+                <h1 class="gsap-hero text-5xl sm:text-6xl lg:text-7xl font-light leading-[1.08] tracking-tight">
+                    Pure Cleaning.<br>
+                    <span class="font-bold text-transparent bg-clip-text bg-gradient-to-r from-amber-600 via-yellow-600 to-amber-700">
+                        Powerful Results.
+                    </span>
+                </h1>
+
+                <p class="gsap-hero text-lg text-gray-600 leading-relaxed max-w-lg">
+                    Experience the golden standard of botanical cleansing. Formulated to cut through tough grease effortlessly while leaving a soothing, fresh ambiance.
+                </p>
+
+                <!-- CTA Buttons -->
+                <div class="gsap-hero flex flex-wrap gap-4 pt-2">
+                    <button class="bg-brand-dark text-white px-8 py-4 rounded-full text-sm font-semibold uppercase tracking-wider btn-hover flex items-center gap-3">
+                        <span>Shop Now</span>
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>
+                    </button>
+                    <button class="bg-white border border-gray-300 text-brand-dark px-8 py-4 rounded-full text-sm font-semibold uppercase tracking-wider btn-hover">
+                        Explore Benefits
+                    </button>
+                </div>
+
+                <!-- Feature Badges -->
+                <div class="gsap-hero pt-8 grid grid-cols-3 gap-4 border-t border-gray-200/60 max-w-lg">
+                    <div>
+                        <p class="text-xl font-bold text-amber-600">100%</p>
+                        <p class="text-xs text-gray-500 font-medium">Plant Based</p>
+                    </div>
+                    <div>
+                        <p class="text-xl font-bold text-amber-600">0%</p>
+                        <p class="text-xs text-gray-500 font-medium">Toxic Residue</p>
+                    </div>
+                    <div>
+                        <p class="text-xl font-bold text-amber-600">10x</p>
+                        <p class="text-xs text-gray-500 font-medium">Grease Power</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- RIGHT SECTION: 3D Bottle + Canvas Liquid Splash -->
+            <div class="lg:col-span-6 relative flex justify-center items-center perspective-container h-[550px]" id="hero-interactive-zone">
+                
+                <!-- 3D Splash Canvas -->
+                <canvas id="splashCanvas" class="absolute inset-0 w-full h-full z-10 pointer-events-none"></canvas>
+
+                <!-- Floating 3D Bottle Wrapper -->
+                <div class="bottle-card relative z-20 w-[280px] sm:w-[320px] cursor-pointer">
+                    <img id="bottleImg" src="ChatGPT Image Jul 29, 2026, 09_09_26 AM.png" 
+                         alt="Avon Herbal Cleaner" 
+                         class="w-full h-auto drop-shadow-[0_25px_35px_rgba(217,119,6,0.3)] select-none pointer-events-none">
+                </div>
+
+            </div>
+
+        </div>
+    </section>
+
+    <!-- 3. MID-SECTION PRODUCT VARIANTS -->
+    <section id="splash-section" class="relative py-32 overflow-hidden bg-white">
+        <!-- Liquid Blobs -->
+        <div class="liquid-blob bg-yellow-400/30" id="yellow-splash"></div>
+        <div class="liquid-blob bg-pink-500/20" id="pink-splash"></div>
+
+        <div class="max-w-7xl mx-auto px-6 relative z-10">
+            
+            <!-- Product 1: Signature Blend -->
+            <div class="flex flex-col md:flex-row items-center gap-16 mb-32 product-row">
+                <div class="w-full md:w-1/2 text-center md:text-left info-block">
+                    <span class="inline-block px-3 py-1 bg-amber-100 text-amber-800 text-xs font-bold tracking-widest uppercase mb-4 rounded-full">Signature Blend</span>
+                    <h2 class="text-4xl font-light mb-4">The Golden Standard</h2>
+                    <p class="text-gray-600 leading-relaxed max-w-md mx-auto md:mx-0">
+                        Infused with natural citrus extracts, our signature golden formula cuts through grease while leaving a refreshing, uplifting scent. Safe for glass, wood, and marble.
+                    </p>
+                </div>
+                <div class="w-full md:w-1/2 p-8 image-block">
+                    <img src="ChatGPT Image Jul 29, 2026, 09_09_26 AM.png" alt="Yellow Cleaner" class="w-full max-w-[380px] mx-auto rounded-[2rem] shadow-[0_20px_50px_rgba(0,0,0,0.08)] float-anim">
+                </div>
+            </div>
+
+            <!-- Product 2: Botanical Rose -->
+            <div class="flex flex-col md:flex-row-reverse items-center gap-16 product-row">
+                <div class="w-full md:w-1/2 text-center md:text-left info-block">
+                    <span class="inline-block px-3 py-1 bg-pink-100 text-pink-800 text-xs font-bold tracking-widest uppercase mb-4 rounded-full">New Arrival</span>
+                    <h2 class="text-4xl font-light mb-4">Botanical Rose</h2>
+                    <p class="text-gray-600 leading-relaxed max-w-md mx-auto md:mx-0">
+                        A gentle, yet effective multi-surface cleaner featuring the delicate, purifying essence of wild rose. Perfect for daily clinical precision in your home.
+                    </p>
+                </div>
+                <div class="w-full md:w-1/2 p-8 image-block">
+                    <img src="ChatGPT Image Jul 29, 2026, 09_14_26 AM.png" alt="Pink Cleaner" class="w-full max-w-[380px] mx-auto rounded-[2rem] shadow-[0_20px_50px_rgba(0,0,0,0.08)] float-anim" style="animation-delay: 1s;">
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 4. ESSENTIAL ELEMENTS (HIGHLIGHTS) -->
+    <section id="elements" class="py-24 bg-brand-beige border-t border-black/5">
+        <div class="max-w-6xl mx-auto px-6">
+            <h3 class="text-center text-3xl font-light mb-16">Essential Elements</h3>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-12">
+                <div class="text-center highlight-item group cursor-pointer">
+                    <div class="w-16 h-16 mx-auto border border-brand-dark rounded-full flex items-center justify-center mb-6 group-hover:bg-brand-dark group-hover:text-white transition duration-500">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 3v18m0-18l-4 4m4-4l4 4"/></svg>
+                    </div>
+                    <h4 class="text-xl font-medium mb-3">Distilled Purity</h4>
+                    <p class="text-sm text-gray-500 leading-relaxed">Triple-filtered water forms the base of every formula, ensuring zero mineral residue on your surfaces.</p>
+                </div>
+                <div class="text-center highlight-item group cursor-pointer">
+                    <div class="w-16 h-16 mx-auto border border-brand-dark rounded-full flex items-center justify-center mb-6 group-hover:bg-brand-dark group-hover:text-white transition duration-500">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M5 13l4 4L19 7"/></svg>
+                    </div>
+                    <h4 class="text-xl font-medium mb-3">Active Botanicals</h4>
+                    <p class="text-sm text-gray-500 leading-relaxed">Cold-pressed plant extracts deliver natural antibacterial properties without harsh, toxic chemicals.</p>
+                </div>
+                <div class="text-center highlight-item group cursor-pointer">
+                    <div class="w-16 h-16 mx-auto border border-brand-dark rounded-full flex items-center justify-center mb-6 group-hover:bg-brand-dark group-hover:text-white transition duration-500">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z"/></svg>
+                    </div>
+                    <h4 class="text-xl font-medium mb-3">Clinical Precision</h4>
+                    <p class="text-sm text-gray-500 leading-relaxed">Formulated in our labs to balance pH levels perfectly for safe daily use on multiple surface types.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 5. REVIEWS CAROUSEL (5 CARDS WITH UPLOADED CUSTOMER IMAGES & 4+ STARS) -->
+    <section id="reviews" class="py-24 bg-white overflow-hidden">
+        <div class="max-w-7xl mx-auto px-6 mb-12 flex flex-col md:flex-row md:items-end justify-between gap-4">
+            <div>
+                <span class="text-amber-600 font-bold text-xs tracking-widest uppercase block mb-2">Verified Testimonials</span>
+                <h3 class="text-3xl md:text-4xl font-light">Loved by Business Owners & Homes.</h3>
+            </div>
+            <p class="text-gray-500 text-sm max-w-sm">Swipe across to read real feedback from customers who rely on Avon Herbal daily.</p>
+        </div>
+
+        <!-- 5 Review Cards Slider Container -->
+        <div class="flex gap-6 overflow-x-auto px-6 pb-12 no-scrollbar snap-x" id="reviews-container">
+            
+            <!-- REVIEW CARD 1 -->
+            <div class="min-w-[310px] md:min-w-[360px] max-w-[380px] bg-brand-beige rounded-2xl p-6 snap-center hover:-translate-y-2 transition-transform duration-300 shadow-sm border border-black/5 flex flex-col justify-between">
+                <div>
+                    <!-- Photo Header -->
+                    <div class="w-full h-52 mb-5 rounded-xl overflow-hidden shadow-inner">
+                        <img src="avonreview.jpeg" alt="Customer Review 1" class="w-full h-full object-cover object-top hover:scale-105 transition duration-500">
+                    </div>
+                    <!-- Rating -->
+                    <div class="flex items-center gap-1 text-amber-500 mb-3 text-base">
+                        ⭐⭐⭐⭐⭐ <span class="text-xs text-gray-500 font-bold ml-1">(5.0)</span>
+                    </div>
+                    <!-- Review Text -->
+                    <p class="text-gray-700 text-sm leading-relaxed mb-6 italic">
+                        "We order Avon Herbal Cleaner in bulk for our office counters and reception desks. It leaves zero streak marks and has a very natural scent that our visitors always compliment!"
+                    </p>
+                </div>
+                <div class="flex items-center justify-between border-t border-gray-200/80 pt-4 mt-auto">
+                    <div>
+                        <div class="text-sm font-bold text-gray-900">Ramesh Kumar</div>
+                        <div class="text-xs text-gray-500">Store & Office Owner</div>
+                    </div>
+                    <span class="text-[10px] bg-green-100 text-green-800 font-semibold px-2 py-1 rounded-full">✔ Verified Purchase</span>
+                </div>
+            </div>
+
+            <!-- REVIEW CARD 2 -->
+            <div class="min-w-[310px] md:min-w-[360px] max-w-[380px] bg-brand-beige rounded-2xl p-6 snap-center hover:-translate-y-2 transition-transform duration-300 shadow-sm border border-black/5 flex flex-col justify-between">
+                <div>
+                    <!-- Photo Header -->
+                    <div class="w-full h-52 mb-5 rounded-xl overflow-hidden shadow-inner">
+                        <img src="avonreview1.jpeg" alt="Customer Review 2" class="w-full h-full object-cover object-top hover:scale-105 transition duration-500">
+                    </div>
+                    <!-- Rating -->
+                    <div class="flex items-center gap-1 text-amber-500 mb-3 text-base">
+                        ⭐⭐⭐⭐⭐ <span class="text-xs text-gray-500 font-bold ml-1">(5.0)</span>
+                    </div>
+                    <!-- Review Text -->
+                    <p class="text-gray-700 text-sm leading-relaxed mb-6 italic">"The multi-purpose liquid works incredibly well on leather sofas and studio furniture. Best part is that it's gentle on hands and 100% herbal!"</p>
+                </div>
+                <div class="flex items-center justify-between border-t border-gray-200/80 pt-4 mt-auto">
+                    <div>
+                        <div class="text-sm font-bold text-gray-900">Vikram Singh</div>
+                        <div class="text-xs text-gray-500">Studio Owner</div>
+                    </div>
+                    <span class="text-[10px] bg-green-100 text-green-800 font-semibold px-2 py-1 rounded-full">✔ Verified Purchase</span>
+                </div>
+            </div>
+
+            <!-- REVIEW CARD 3 -->
+            <div class="min-w-[310px] md:min-w-[360px] max-w-[380px] bg-brand-beige rounded-2xl p-6 snap-center hover:-translate-y-2 transition-transform duration-300 shadow-sm border border-black/5 flex flex-col justify-between">
+                <div>
+                    <!-- Photo Header -->
+                    <div class="w-full h-52 mb-5 rounded-xl overflow-hidden shadow-inner">
+                        <img src="avonreview2.jpeg" alt="Customer Review 3" class="w-full h-full object-cover object-top hover:scale-105 transition duration-500">
+                    </div>
+                    <!-- Rating (4.5 Stars) -->
+                    <div class="flex items-center gap-1 text-amber-500 mb-3 text-base">
+                        ⭐⭐⭐⭐<span class="text-amber-500">★</span> <span class="text-xs text-gray-500 font-bold ml-1">(4.5)</span>
+                    </div>
+                    <!-- Review Text -->
+                    <p class="text-gray-700 text-sm leading-relaxed mb-6 italic">
+                        "Great product quality. Cuts through tough stains and grease quickly. I bought several bottles for daily maintenance at my commercial space."
+                    </p>
+                </div>
+                <div class="flex items-center justify-between border-t border-gray-200/80 pt-4 mt-auto">
+                    <div>
+                        <div class="text-sm font-bold text-gray-900">Suresh Reddy</div>
+                        <div class="text-xs text-gray-500">Lounge Manager</div>
+                    </div>
+                    <span class="text-[10px] bg-green-100 text-green-800 font-semibold px-2 py-1 rounded-full">✔ Verified Purchase</span>
+                </div>
+            </div>
+
+            <!-- REVIEW CARD 4 -->
+            <div class="min-w-[310px] md:min-w-[360px] max-w-[380px] bg-brand-beige rounded-2xl p-6 snap-center hover:-translate-y-2 transition-transform duration-300 shadow-sm border border-black/5 flex flex-col justify-between">
+                <div>
+                    <!-- Photo Header -->
+                    <div class="w-full h-52 mb-5 rounded-xl overflow-hidden shadow-inner">
+                        <img src="avonreview3.jpeg" alt="Customer Review 4" class="w-full h-full object-cover object-top hover:scale-105 transition duration-500">
+                    </div>
+                    <!-- Rating -->
+                    <div class="flex items-center gap-1 text-amber-500 mb-3 text-base">
+                        ⭐⭐⭐⭐⭐ <span class="text-xs text-gray-500 font-bold ml-1">(5.0)</span>
+                    </div>
+                    <!-- Review Text -->
+                    <p class="text-gray-700 text-sm leading-relaxed mb-6 italic">
+                        "Extremely effective cleaning liquid! One bottle lasts a long time because it is concentrated. Leaves every surface shining brightly within seconds."
+                    </p>
+                </div>
+                <div class="flex items-center justify-between border-t border-gray-200/80 pt-4 mt-auto">
+                    <div>
+                        <div class="text-sm font-bold text-gray-900">Anil Sharma</div>
+                        <div class="text-xs text-gray-500">Business Client</div>
+                    </div>
+                    <span class="text-[10px] bg-green-100 text-green-800 font-semibold px-2 py-1 rounded-full">✔ Verified Purchase</span>
+                </div>
+            </div>
+
+            <!-- REVIEW CARD 5 -->
+            <div class="min-w-[310px] md:min-w-[360px] max-w-[380px] bg-brand-beige rounded-2xl p-6 snap-center hover:-translate-y-2 transition-transform duration-300 shadow-sm border border-black/5 flex flex-col justify-between">
+                <div>
+                    <!-- Photo Header -->
+                    <div class="w-full h-52 mb-5 rounded-xl overflow-hidden shadow-inner">
+                        <img src="avonreview4.jpeg" alt="Customer Review 5" class="w-full h-full object-cover object-top hover:scale-105 transition duration-500">
+                    </div>
+                    <!-- Rating -->
+                    <div class="flex items-center gap-1 text-amber-500 mb-3 text-base">
+                        ⭐⭐⭐⭐⭐ <span class="text-xs text-gray-500 font-bold ml-1">(5.0)</span>
+                    </div>
+                    <!-- Review Text -->
+                    <p class="text-gray-700 text-sm leading-relaxed mb-6 italic">
+                        "Super satisfied with the prompt delivery and product performance! Avon Herbal Cleaner is my go-to choice for all-purpose cleaning now."
+                    </p>
+                </div>
+                <div class="flex items-center justify-between border-t border-gray-200/80 pt-4 mt-auto">
+                    <div>
+                        <div class="text-sm font-bold text-gray-900">Manoj Prasad</div>
+                        <div class="text-xs text-gray-500">Commercial Client</div>
+                    </div>
+                    <span class="text-[10px] bg-green-100 text-green-800 font-semibold px-2 py-1 rounded-full">✔ Verified Purchase</span>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- 6. FOOTER -->
+    <footer class="bg-brand-beige py-12 border-t border-black/10">
+        <div class="max-w-7xl mx-auto px-6 flex flex-col md:flex-row justify-between items-center gap-6">
+            <div class="text-xl font-bold tracking-widest uppercase">Avon Herbal</div>
+            <div class="text-sm text-gray-500">© 2026 Avon Herbal. Purity in every drop.</div>
+            <div class="flex gap-6 text-sm text-gray-500">
+                <a href="#" class="hover:text-black transition">Privacy</a>
+                <a href="#" class="hover:text-black transition">Terms</a>
+                <a href="#" class="hover:text-black transition">Contact</a>
+            </div>
+        </div>
+    </footer>
+
+    <!-- JS ANIMATION ENGINE -->
+    <script>
+        gsap.registerPlugin(ScrollTrigger);
+
+        // --- 1. HERO ANIMATIONS ---
+        gsap.from(".gsap-hero", {
+            y: 40,
+            opacity: 0,
+            duration: 1.2,
+            stagger: 0.15,
+            ease: "power3.out",
+            delay: 0.2
+        });
+
+        // 3D Card Tilt Effect
+        const heroZone = document.getElementById('hero-interactive-zone');
+        const bottleCard = document.querySelector('.bottle-card');
+
+        heroZone.addEventListener('mousemove', (e) => {
+            const rect = heroZone.getBoundingClientRect();
+            const x = e.clientX - rect.left - (rect.width / 2);
+            const y = e.clientY - rect.top - (rect.height / 2);
+            
+            const tiltX = (y / rect.height) * -25;
+            const tiltY = (x / rect.width) * 25;
+
+            bottleCard.style.transform = `rotateX(${tiltX}deg) rotateY(${tiltY}deg) scale(1.05)`;
+        });
+
+        heroZone.addEventListener('mouseleave', () => {
+            bottleCard.style.transform = `rotateX(0deg) rotateY(0deg) scale(1)`;
+        });
+
+        // --- 2. 3D LIQUID CANVAS ENGINE ---
+        const canvas = document.getElementById('splashCanvas');
+        const ctx = canvas.getContext('2d');
+
+        function resizeCanvas() {
+            canvas.width = canvas.offsetWidth;
+            canvas.height = canvas.offsetHeight;
+        }
+        resizeCanvas();
+        window.addEventListener('resize', resizeCanvas);
+
+        class LiquidParticle {
+            constructor(x, y, isImpact = false) {
+                this.x = x;
+                this.y = y;
+                this.radius = isImpact ? Math.random() * 12 + 4 : Math.random() * 6 + 2;
+                
+                const angle = Math.random() * Math.PI * 2;
+                const force = isImpact ? Math.random() * 14 + 6 : Math.random() * 5 + 2;
+                
+                this.vx = Math.cos(angle) * force;
+                this.vy = Math.sin(angle) * force - (isImpact ? 2 : 0);
+                this.gravity = 0.25;
+                this.friction = 0.96;
+                this.alpha = 1;
+                this.decay = Math.random() * 0.015 + 0.008;
+                
+                const colors = ['#F59E0B', '#FBBF24', '#FCD34D', '#FEF08A', '#D97706'];
+                this.color = colors[Math.floor(Math.random() * colors.length)];
+                this.depth = Math.random() * 1.5 + 0.5;
+            }
+
+            update() {
+                this.vx *= this.friction;
+                this.vy *= this.friction;
+                this.vy += this.gravity;
+
+                this.x += this.vx;
+                this.y += this.vy;
+                this.alpha -= this.decay;
+            }
+
+            draw(ctx) {
+                ctx.save();
+                ctx.globalAlpha = Math.max(this.alpha, 0);
+                
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.radius * this.depth, 0, Math.PI * 2);
+                ctx.fillStyle = this.color;
+                ctx.shadowColor = '#F59E0B';
+                ctx.shadowBlur = 10;
+                ctx.fill();
+
+                ctx.beginPath();
+                ctx.arc(this.x - this.radius * 0.3, this.y - this.radius * 0.3, this.radius * 0.3, 0, Math.PI * 2);
+                ctx.fillStyle = 'rgba(255, 255, 255, 0.8)';
+                ctx.fill();
+
+                ctx.restore();
+            }
+        }
+
+        let particles = [];
+        let splashImpactOccurred = false;
+
+        function trigger3DSplashImpact() {
+            const centerX = canvas.width / 2;
+            const centerY = canvas.height / 2;
+
+            for (let i = 0; i < 90; i++) {
+                particles.push(new LiquidParticle(centerX, centerY, true));
+            }
+            splashImpactOccurred = true;
+        }
+
+        setTimeout(trigger3DSplashImpact, 600);
+
+        function spawnAmbientLiquid() {
+            if (splashImpactOccurred && Math.random() < 0.4) {
+                const centerX = canvas.width / 2 + (Math.random() * 120 - 60);
+                const centerY = canvas.height / 2 + (Math.random() * 180 - 90);
+                particles.push(new LiquidParticle(centerX, centerY, false));
+            }
+        }
+
+        function animateSplash() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            spawnAmbientLiquid();
+
+            for (let i = particles.length - 1; i >= 0; i--) {
+                const p = particles[i];
+                p.update();
+                p.draw(ctx);
+
+                if (p.alpha <= 0) {
+                    particles.splice(i, 1);
+                }
+            }
+
+            requestAnimationFrame(animateSplash);
+        }
+
+        animateSplash();
+
+        document.getElementById('bottleImg').parentElement.addEventListener('click', () => {
+            gsap.to(bottleCard, { scale: 0.92, duration: 0.1, yoyo: true, repeat: 1 });
+            trigger3DSplashImpact();
+        });
+
+        // --- 3. SCROLLTRIGGER ANIMATIONS FOR LOWER SECTIONS ---
+        ScrollTrigger.create({
+            trigger: ".product-row:nth-child(1)",
+            start: "top center",
+            end: "bottom center",
+            onEnter: () => {
+                gsap.to("#yellow-splash", { scale: 1.5, opacity: 1, duration: 1.5, ease: "power2.out" });
+                gsap.to("#pink-splash", { opacity: 0, duration: 1 });
+            },
+            onEnterBack: () => {
+                gsap.to("#yellow-splash", { scale: 1.5, opacity: 1, duration: 1.5, ease: "power2.out" });
+                gsap.to("#pink-splash", { opacity: 0, duration: 1 });
+            }
+        });
+
+        ScrollTrigger.create({
+            trigger: ".product-row:nth-child(2)",
+            start: "top center",
+            end: "bottom center",
+            onEnter: () => {
+                gsap.to("#pink-splash", { scale: 1.5, opacity: 1, duration: 1.5, ease: "power2.out" });
+                gsap.to("#yellow-splash", { opacity: 0, duration: 1 });
+            }
+        });
+
+        gsap.utils.toArray(".info-block, .image-block").forEach(block => {
+            gsap.from(block, {
+                scrollTrigger: {
+                    trigger: block,
+                    start: "top 85%",
+                },
+                y: 50,
+                opacity: 0,
+                duration: 1,
+                ease: "power3.out"
+            });
+        });
+
+        gsap.from(".highlight-item", {
+            scrollTrigger: {
+                trigger: ".highlight-item",
+                start: "top 85%"
+            },
+            y: 40,
+            opacity: 0,
+            duration: 0.8,
+            stagger: 0.2,
+            ease: "power2.out"
+        });
+    </script>
+</body>
+</html>
